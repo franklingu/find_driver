@@ -31,8 +31,13 @@ dependencies {
     // tag::actuator[]
     compile("org.springframework.boot:spring-boot-starter-actuator")
     // end::actuator[]
+    // tag::db[]
+    compile('org.springframework.boot:spring-boot-starter-data-jpa')
+    compile('org.postgresql:postgresql:')
+    compile('org.hibernate:hibernate-search-orm:5.1.0.Final')
+    runtime('com.h2database:h2')
+    // end::db[]
     // tag::tests[]
     testCompile("org.springframework.boot:spring-boot-starter-test")
     // end::tests[]
-    testCompile group: 'junit', name: 'junit', version: '4.12'
 }

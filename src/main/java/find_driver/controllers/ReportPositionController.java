@@ -1,53 +1,64 @@
 package find_driver.controllers;
 
-import find_driver.models.GeoPosition;
-import find_driver.utils.GeoPositionValidationException;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import find_driver.models.Driver;
+import find_driver.models.DriverPosition;
+import find_driver.repositories.DriverRepository;
+import find_driver.repositories.DriverPositionRepository;
+import find_driver.utils.GeoPosition;
+import find_driver.utils.GeoPositionValidationException;
+
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-class DriverLocation {
-    private float _latitude;
-    private float _longitude;
-    private float _accuracy;
+class DriverPositionReport {
+    private double latitude;
+    private double longitude;
+    private double accuracy;
 
-    public DriverLocation() {}
+    public DriverPositionReport() {}
 
-    public DriverLocation(float latitude, float longitude, float accuracy) {
-        _latitude = latitude;
-        _longitude = longitude;
-        _accuracy = accuracy;
+    public DriverPositionReport(double latitude, double longitude, double accuracy) {
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.accuracy = accuracy;
     }
 
-    public float getLatitude() {
-        return _latitude;
+    public double getLatitude() {
+        return latitude;
     }
 
-    public void setLatitude(float latitude) {
-        this._latitude = latitude;
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
     }
 
-    public float getLongitude() {
-        return _longitude;
+    public double getLongitude() {
+        return longitude;
     }
 
-    public void setLongitude(float longitude) {
-        this._longitude = longitude;
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
     }
 
-    public float getAccuracy() {
-        return _accuracy;
+    public double getAccuracy() {
+        return accuracy;
     }
 
-    public void setAccuracy(float accuracy) {
-        this._accuracy = accuracy;
+    public void setAccuracy(double accuracy) {
+        this.accuracy = accuracy;
     }
 }
 
 @RestController
 public class ReportPositionController {
+    @Autowired
+    private DriverRepository driverRepository;
+    @Autowired
+    private DriverPositionRepository driverPositionRepository;
+
     @RequestMapping(
             value = "/drivers/{driverId}/location",
             method = RequestMethod.PUT,
@@ -56,17 +67,16 @@ public class ReportPositionController {
     )
     public ResponseEntity<?> updatePosition(
             @PathVariable(value="driverId") String driverId,
-            @RequestBody DriverLocation location) {
-        GeoPosition point = null;
+            @RequestBody DriverPositionReport location) {
         try {
-            point = new GeoPosition(location.getLatitude(), location.getLongitude());
+            new GeoPosition(location.getLatitude(), location.getLongitude());
         } catch (GeoPositionValidationException err) {
             return new ResponseEntity<>(
                     String.format("{\"errors\":[\"%s\"]}\r\n", err.getMessage()),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
         }
-        int actualDriverId = -1;
+        long actualDriverId;
         try {
             actualDriverId = Integer.parseInt(driverId);
         } catch (NumberFormatException err) {
@@ -78,6 +88,21 @@ public class ReportPositionController {
         if (actualDriverId < 0 || actualDriverId > 50000) {
             return new ResponseEntity<>("{}\r\n", HttpStatus.NOT_FOUND);
         }
+        Driver driver = driverRepository.findOne(actualDriverId);
+        if (driver == null) {
+            return new ResponseEntity<>("{}\r\n", HttpStatus.NOT_FOUND);
+        }
+
+        DriverPosition driverPosition = driverPositionRepository.findByDriverId(actualDriverId);
+        if (driverPosition == null) {
+            driverPosition = new DriverPosition();
+        }
+        driverPosition.setDriverId(driver.getId());
+        driverPosition.setLatitude(location.getLatitude());
+        driverPosition.setLongitude(location.getLatitude());
+        driverPosition.setAccuracy(location.getAccuracy());
+        driverPositionRepository.save(driverPosition);
+
         return new ResponseEntity<>("{}\r\n", HttpStatus.OK);
     }
 }
