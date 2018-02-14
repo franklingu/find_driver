@@ -72,7 +72,7 @@ public class ReportPositionController {
             new GeoPosition(location.getLatitude(), location.getLongitude());
         } catch (GeoPositionValidationException err) {
             return new ResponseEntity<>(
-                    String.format("{\"errors\":[\"%s\"]}\r\n", err.getMessage()),
+                    String.format("{\"errors\":[\"%s\"]}", err.getMessage()),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
         }
@@ -81,28 +81,28 @@ public class ReportPositionController {
             actualDriverId = Integer.parseInt(driverId);
         } catch (NumberFormatException err) {
             return new ResponseEntity<>(
-                    String.format("{\"errors\":[\"%s\"]}\r\n", "Invalid driver id format"),
+                    String.format("{\"errors\":[\"%s\"]}", "Invalid driver id format"),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
         }
         if (actualDriverId < 0 || actualDriverId > 50000) {
-            return new ResponseEntity<>("{}\r\n", HttpStatus.NOT_FOUND);
+            return new ResponseEntity<>("{}", HttpStatus.NOT_FOUND);
         }
-        Driver driver = driverRepository.findOne(actualDriverId);
-        if (driver == null) {
-            return new ResponseEntity<>("{}\r\n", HttpStatus.NOT_FOUND);
-        }
+//        Driver driver = driverRepository.findOne(actualDriverId);
+//        if (driver == null) {
+//            return new ResponseEntity<>("{}\r\n", HttpStatus.NOT_FOUND);
+//        }
 
         DriverPosition driverPosition = driverPositionRepository.findByDriverId(actualDriverId);
         if (driverPosition == null) {
             driverPosition = new DriverPosition();
         }
-        driverPosition.setDriverId(driver.getId());
+        driverPosition.setDriverId(actualDriverId);
         driverPosition.setLatitude(location.getLatitude());
-        driverPosition.setLongitude(location.getLatitude());
+        driverPosition.setLongitude(location.getLongitude());
         driverPosition.setAccuracy(location.getAccuracy());
         driverPositionRepository.save(driverPosition);
 
-        return new ResponseEntity<>("{}\r\n", HttpStatus.OK);
+        return new ResponseEntity<>("{}", HttpStatus.OK);
     }
 }

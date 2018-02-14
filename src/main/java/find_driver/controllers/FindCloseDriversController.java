@@ -94,7 +94,7 @@ public class FindCloseDriversController {
             new GeoPosition(latitude, longitude);
         } catch (GeoPositionValidationException err) {
             return new ResponseEntity<>(
-                    String.format("{\"errors\":[\"%s\"]}\r\n", err.getMessage()),
+                    String.format("{\"errors\":[\"%s\"]}", err.getMessage()),
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
         }
@@ -111,7 +111,7 @@ public class FindCloseDriversController {
         );
 
         if (results == null) {
-            return new ResponseEntity<>("[]\r\n", HttpStatus.OK);
+            return new ResponseEntity<>("[]", HttpStatus.OK);
         }
         List<SearchResultReport> ret = new ArrayList<SearchResultReport>();
         for (DriverPosition dp: results) {

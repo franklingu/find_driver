@@ -24,30 +24,37 @@ public class FindCloseDriversControllerTest {
 
     @Test
     public void testGetDriversOK() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/drivers?latitude=1.0&longitude=0.0")
+        mvc.perform(MockMvcRequestBuilders.get("/drivers")
+                .param("longitude", "0.0")
+                .param("latitude", "1.0")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(content().string(equalTo("[]\r\n")));
+                .andExpect(content().string(equalTo("[]")));
     }
 
     @Test
     public void testGetDriversInvalidParameterType() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/drivers?latitude=1.0&longitude=dafdf")
+        mvc.perform(MockMvcRequestBuilders.get("/drivers")
+                .param("latitude", "1.0")
+                .param("longitude", "random")
                 .accept(MediaType.APPLICATION_JSON))
                 .andExpect(status().isBadRequest());
     }
 
     @Test
     public void testGetDriversMissingParameter() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/drivers?latitude=1.0")
+        mvc.perform(MockMvcRequestBuilders.get("/drivers")
+                .param("latitude", "0.0")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().isBadRequest());
+                .andExpect(status().is(400));
     }
 
     @Test
     public void testGetDriversInvalidParameter() throws Exception {
-        mvc.perform(MockMvcRequestBuilders.get("/drivers?latitude=1.0&longitude=-200")
+        mvc.perform(MockMvcRequestBuilders.get("/drivers")
+                .param("latitude", "1.0")
+                .param("longitude", "-200")
                 .accept(MediaType.APPLICATION_JSON))
-                .andExpect(status().is4xxClientError());
+                .andExpect(status().is(422));
     }
 }

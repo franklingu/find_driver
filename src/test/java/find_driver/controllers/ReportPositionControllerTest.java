@@ -27,7 +27,8 @@ public class ReportPositionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"longitude\": 9.0, \"latitude\": 9.0, \"accuracy\": 1.0}")
                 .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().isOk());
+        ).andExpect(status().isOk())
+        .andExpect(content().string(equalTo("{}")));
     }
 
     @Test
@@ -43,15 +44,15 @@ public class ReportPositionControllerTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content("{\"longitude\": 9.0, \"latitude\": -209.0, \"accuracy\": 1.0}")
                 .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().is4xxClientError());
+        ).andExpect(status().is(422));
     }
 
     @Test
     public void testUpdatePositionNotFound() throws Exception {
         mvc.perform(MockMvcRequestBuilders.put("/drivers/-1/location")
                 .contentType(MediaType.APPLICATION_JSON)
-                .content("{\"longitude\": 9.0, \"latitude\": -209.0, \"accuracy\": 1.0}")
+                .content("{\"longitude\": 9.0, \"latitude\": -20.0, \"accuracy\": 1.0}")
                 .accept(MediaType.APPLICATION_JSON)
-        ).andExpect(status().is4xxClientError());
+        ).andExpect(status().is(404));
     }
 }
