@@ -43,23 +43,25 @@ public class DriverPositionSearchService {
         }
     }
 
+    /** Return list of driver positions within radius of specified center
+     *
+     */
     @Transactional
-    public List<DriverPosition> searchByLocation(double latitude, double longitude, double radius, int limit) {
-
+    public List<DriverPosition> searchByLocation(
+            double latitude, double longitude, double radius, int limit) {
         FullTextEntityManager fullTextEntityManager = Search.getFullTextEntityManager(entityManager);
         QueryBuilder qb = fullTextEntityManager
                 .getSearchFactory().buildQueryBuilder().forEntity(DriverPosition.class).get();
         Query luceneQuery = qb.spatial()
-                .within(radius / 1000, Unit.KM).ofLatitude(latitude).andLongitude(longitude).createQuery();
-
-        javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(luceneQuery, DriverPosition.class);
-
-        // execute search
+                .within(radius / 1000, Unit.KM)
+                .ofLatitude(latitude).andLongitude(longitude).createQuery();
+        javax.persistence.Query jpaQuery = fullTextEntityManager.createFullTextQuery(
+                luceneQuery, DriverPosition.class
+        ).setMaxResults(limit);
 
         List<DriverPosition> driverPositions = null;
         try {
             driverPositions = jpaQuery.getResultList();
-            driverPositions = driverPositions.subList(0, Math.min(driverPositions.size(), limit));
         } catch (NoResultException nre) {
             // do nothing
         }
