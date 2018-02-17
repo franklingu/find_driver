@@ -4,6 +4,12 @@ import javax.persistence.*;
 import org.hibernate.search.annotations.*;
 import java.util.Date;
 
+/** Represent driver's position in database.
+ *
+ * TODO: add created to keep track of history of driver's
+ *   location, or keep archive of driver's location into
+ *   another table.
+ */
 @Spatial(spatialMode = SpatialMode.HASH)
 @Indexed
 @Entity

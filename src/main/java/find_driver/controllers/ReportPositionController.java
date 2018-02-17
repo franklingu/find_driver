@@ -14,6 +14,9 @@ import find_driver.utils.GeoPositionValidationException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
+/** Helper class to serialize request objects.
+ *
+ */
 class DriverPositionReport {
     private double latitude;
     private double longitude;
@@ -52,6 +55,9 @@ class DriverPositionReport {
     }
 }
 
+/** Controller for drivers to report positions.
+ *
+ */
 @RestController
 public class ReportPositionController {
     @Autowired
@@ -85,13 +91,18 @@ public class ReportPositionController {
                     HttpStatus.UNPROCESSABLE_ENTITY
             );
         }
+        // A quick way to check driver id exists in database or not
+        //   Do use constant here as in production these will be replaced by
+        //   complex and more dynamic check
         if (actualDriverId < 0 || actualDriverId > 50000) {
             return new ResponseEntity<>("{}", HttpStatus.NOT_FOUND);
         }
-//        Driver driver = driverRepository.findOne(actualDriverId);
-//        if (driver == null) {
-//            return new ResponseEntity<>("{}\r\n", HttpStatus.NOT_FOUND);
-//        }
+        // Supposedly we should check driver existence first. Due to time constraint, we will
+        //   just leave it like this for now
+        // Driver driver = driverRepository.findOne(actualDriverId);
+        // if (driver == null) {
+        //     return new ResponseEntity<>("{}\r\n", HttpStatus.NOT_FOUND);
+        // }
 
         DriverPosition driverPosition = driverPositionRepository.findByDriverId(actualDriverId);
         if (driverPosition == null) {

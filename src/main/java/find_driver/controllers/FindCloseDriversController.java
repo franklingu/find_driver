@@ -17,7 +17,9 @@ import find_driver.utils.GeoPositionValidationException;
 
 import static org.springframework.http.MediaType.APPLICATION_JSON_VALUE;
 
-
+/** Helper class to serialize response object.
+ *
+ */
 class SearchResultReport {
     private long id;
     private double latitude;
@@ -51,6 +53,9 @@ class SearchResultReport {
         this.longitude = longitude;
     }
 
+    /** Calculate distance between current lat and long to given lat and long.
+     *
+     */
     public void distanceFrom(double latitude, double longitude) {
         final int R = 6371; // Radius of the earth
 

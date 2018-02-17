@@ -1,5 +1,8 @@
 package find_driver.utils;
 
+/** Utility class for validate a geo location.
+ *
+ */
 public class GeoPosition {
     private double latitude;
     private double longitude;

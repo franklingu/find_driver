@@ -5,6 +5,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+/** Represents a driver. Not used in this implementation due to time limit.
+ */
 @Entity
 public class Driver {
     @Id

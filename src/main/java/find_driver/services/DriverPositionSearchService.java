@@ -15,6 +15,9 @@ import java.util.List;
 
 import find_driver.models.DriverPosition;
 
+/** Provide search feature to driver positions.
+ *
+ */
 @Service
 public class DriverPositionSearchService {
 

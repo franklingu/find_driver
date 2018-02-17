@@ -7,6 +7,10 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 import find_driver.services.DriverPositionSearchService;
+
+/** Provide configuration to enable DriverPositionSearchService
+ *
+ */
 @EnableAutoConfiguration
 @Configuration
 public class CustomHibernateSearchConfiguration {
