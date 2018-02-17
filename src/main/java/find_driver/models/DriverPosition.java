@@ -63,4 +63,29 @@ public class DriverPosition {
     public void setAccuracy(Double accuracy) {
         this.accuracy = accuracy;
     }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == null) {
+            return false;
+        }
+        if (!DriverPosition.class.isAssignableFrom(obj.getClass())) {
+            return false;
+        }
+        final DriverPosition another = (DriverPosition)obj;
+        if (id == another.getId() && id != null) {
+            return true;
+        }
+        final double threshold = 1E-9;
+        boolean latSame = ((latitude == null && another.getLatitude() == null)
+                ||Math.abs(latitude - another.getLatitude()) < threshold);
+        boolean longSame = ((longitude == null && another.getLongitude() == null)
+                || Math.abs(longitude - another.getLongitude()) < threshold);
+        boolean accuracySame = ((accuracy == null && another.getAccuracy() == null)
+                || Math.abs(accuracy - another.getAccuracy()) < threshold);
+        if (latSame && longSame && accuracySame) {
+            return true;
+        }
+        return false;
+    }
 }

@@ -24,12 +24,6 @@ class DriverPositionReport {
 
     public DriverPositionReport() {}
 
-    public DriverPositionReport(double latitude, double longitude, double accuracy) {
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.accuracy = accuracy;
-    }
-
     public double getLatitude() {
         return latitude;
     }
