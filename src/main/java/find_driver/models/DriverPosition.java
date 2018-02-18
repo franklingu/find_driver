@@ -17,6 +17,9 @@ public class DriverPosition {
     @Id
     @GeneratedValue(strategy=GenerationType.AUTO)
     private Long id;
+    // Custom constraint for current implementation
+    //   each driver should have only one most updated position
+    @Column(unique = true)
     private Long driverId;
     @Latitude
     private Double latitude;
