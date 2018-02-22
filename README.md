@@ -1,5 +1,7 @@
-find_driver
+find_driver_demo
 =============================================
+
+[![Build Status](https://travis-ci.org/franklingu/find_driver_demo.svg?branch=master)](https://travis-ci.org/franklingu/find_driver_demo)
 
 ## Intro
 This repo contains implementation for a basic HTTP rest server that can accepts drivers' updating position and accepts users search for nearby drivers based on current drivers' positions.
